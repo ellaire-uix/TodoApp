@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Haptics from 'react-native-haptic-feedback';
 import { uid } from '../utils/helpers';
@@ -23,16 +23,16 @@ export function useTodos() {
     }
   }, [todos]);
 
-  const addTodo = useCallback((text: string, priority: Priority) => {
+  const addTodo = (text: string, priority: Priority) => {
     if (!text) return;
     Haptics.trigger('impactLight');
     setTodos(prev => [
       { id: uid(), text, completed: false, priority, createdAt: Date.now() },
       ...prev,
     ]);
-  }, []);
+  };
 
-  const toggleTodo = useCallback((id: string) => {
+  const toggleTodo = (id: string) => {
     setTodos(prev =>
       prev.map(t =>
         t.id === id
@@ -44,28 +44,25 @@ export function useTodos() {
           : t,
       ),
     );
-  }, []);
+  };
 
-  const deleteTodo = useCallback((id: string) => {
+  const deleteTodo = (id: string) => {
     Haptics.trigger('notificationWarning');
     setTodos(prev => prev.filter(t => t.id !== id));
-  }, []);
+  };
 
-  const saveEdit = useCallback((id: string, text: string, p: Priority) => {
+  const saveEdit = (id: string, text: string, p: Priority) => {
     setTodos(prev =>
       prev.map(t => (t.id === id ? { ...t, text, priority: p } : t)),
     );
-  }, []);
+  };
 
-  const clearDone = useCallback(() => {
+  const clearDone = () => {
     Haptics.trigger('impactHeavy');
     setTodos(prev => prev.filter(t => !t.completed));
-  }, []);
+  };
 
-  const activeCount = useMemo(
-    () => todos.reduce((n, t) => n + (t.completed ? 0 : 1), 0),
-    [todos],
-  );
+  const activeCount = todos.reduce((n, t) => n + (t.completed ? 0 : 1), 0);
   const completedCount = todos.length - activeCount;
 
   return {

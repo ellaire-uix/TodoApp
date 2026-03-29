@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react'; // removed useRef
+import React from 'react'; // removed useRef
 import { View, TextInput, Pressable, StyleSheet } from 'react-native'; // removed TouchableOpacity
 import Feather from 'react-native-vector-icons/Feather';
 import PriorityPill from './PriorityPill';
@@ -16,57 +16,58 @@ interface TodoInputProps {
   addTodo: () => void;
 }
 
-const TodoInput = memo(
-  ({ input, setInput, priority, setPriority, addTodo }: TodoInputProps) => {
-    const isValid = input.trim().length > 0;
+const TodoInput = ({
+  input,
+  setInput,
+  priority,
+  setPriority,
+  addTodo,
+}: TodoInputProps) => {
+  const isValid = input.trim().length > 0;
 
-    const handlePriorityPress = useCallback(
-      (p: Priority) => {
-        setPriority(p);
-      },
-      [setPriority],
-    );
+  const handlePriorityPress = (p: Priority) => {
+    setPriority(p);
+  };
 
-    return (
-      <View style={styles.container}>
-        <TextInput
-          style={styles.input}
-          value={input}
-          onChangeText={setInput}
-          placeholder="Add a task…"
-          placeholderTextColor="#44435A"
-          returnKeyType="done"
-          onSubmitEditing={addTodo}
-          selectionColor="#7C6AF7"
-        />
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        value={input}
+        onChangeText={setInput}
+        placeholder="Add a task…"
+        placeholderTextColor="#44435A"
+        returnKeyType="done"
+        onSubmitEditing={addTodo}
+        selectionColor="#7C6AF7"
+      />
 
-        <View style={styles.bottomRow}>
-          <View style={styles.pillRow}>
-            {PRIORITIES.map(p => (
-              <PriorityPill
-                key={p}
-                priority={p}
-                selected={priority === p}
-                onPress={() => handlePriorityPress(p)}
-              />
-            ))}
-          </View>
-
-          <Pressable
-            style={[
-              styles.addButton,
-              isValid ? ADD_BUTTON_ACTIVE : ADD_BUTTON_INACTIVE,
-            ]}
-            onPress={addTodo}
-            disabled={!isValid}
-          >
-            <Feather name="plus" size={22} color="#fff" />
-          </Pressable>
+      <View style={styles.bottomRow}>
+        <View style={styles.pillRow}>
+          {PRIORITIES.map(p => (
+            <PriorityPill
+              key={p}
+              priority={p}
+              selected={priority === p}
+              onPress={() => handlePriorityPress(p)}
+            />
+          ))}
         </View>
+
+        <Pressable
+          style={[
+            styles.addButton,
+            isValid ? ADD_BUTTON_ACTIVE : ADD_BUTTON_INACTIVE,
+          ]}
+          onPress={addTodo}
+          disabled={!isValid}
+        >
+          <Feather name="plus" size={22} color="#fff" />
+        </Pressable>
       </View>
-    );
-  },
-);
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Priority, PRIORITY_COLOR } from '../utils/constants';
 
@@ -29,22 +29,18 @@ interface PriorityPillProps {
   onPress?: () => void;
 }
 
-const PriorityPill = memo(
-  ({ priority, selected, onPress }: PriorityPillProps) => {
-    const color = PRIORITY_COLOR[priority];
-    const variantStyle =
-      PILL_STYLES[priority][selected ? 'selected' : 'unselected'];
+const PriorityPill = ({ priority, selected, onPress }: PriorityPillProps) => {
+  const color = PRIORITY_COLOR[priority];
+  const variantStyle =
+    PILL_STYLES[priority][selected ? 'selected' : 'unselected'];
 
-    return (
-      <Pressable onPress={onPress} style={[styles.pill, variantStyle]}>
-        <View style={[styles.dot, { backgroundColor: color }]} />
-        <Text style={[styles.label, { color }]}>
-          {PRIORITY_LABELS[priority]}
-        </Text>
-      </Pressable>
-    );
-  },
-);
+  return (
+    <Pressable onPress={onPress} style={[styles.pill, variantStyle]}>
+      <View style={[styles.dot, { backgroundColor: color }]} />
+      <Text style={[styles.label, { color }]}>{PRIORITY_LABELS[priority]}</Text>
+    </Pressable>
+  );
+};
 
 const styles = StyleSheet.create({
   pill: {

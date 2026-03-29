@@ -1,4 +1,4 @@
-import React, { useState, useCallback, memo, useEffect } from 'react'; // removed useEffect
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,12 @@ import {
   Pressable,
   Modal,
   StyleSheet,
-} from 'react-native'; // removed TouchableOpacity
+} from 'react-native';
 import Haptics from 'react-native-haptic-feedback';
 import PriorityPill from './PriorityPill';
 import { Todo, Priority } from '../utils/constants';
 
-const PRIORITIES: Priority[] = ['high', 'medium', 'low']; // moved outside, stable reference
+const PRIORITIES: Priority[] = ['high', 'medium', 'low'];
 
 interface EditModalProps {
   visible: boolean;
@@ -20,19 +20,19 @@ interface EditModalProps {
   onClose: () => void;
 }
 
-const EditModal = memo(({ visible, todo, onSave, onClose }: EditModalProps) => {
+const EditModal = ({ visible, todo, onSave, onClose }: EditModalProps) => {
   const [text, setText] = useState(todo?.text ?? '');
   const [priority, setPriority] = useState<Priority>(
     todo?.priority ?? 'medium',
   );
 
-  const handleSave = useCallback(() => {
+  const handleSave = () => {
     const t = text.trim();
     if (!t || !todo) return;
     Haptics.trigger('impactLight');
     onSave(todo.id, t, priority);
     onClose();
-  }, [text, priority, todo, onSave, onClose]);
+  };
 
   useEffect(() => {
     if (visible) {
@@ -100,7 +100,7 @@ const EditModal = memo(({ visible, todo, onSave, onClose }: EditModalProps) => {
       </Pressable>
     </Modal>
   );
-});
+};
 
 const styles = StyleSheet.create({
   overlay: {

@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import React from 'react';
 import { View, Text, Pressable, Keyboard, StyleSheet } from 'react-native'; // Pressable replaces TouchableOpacity
 import Feather from 'react-native-vector-icons/Feather';
 import { Filter } from '../utils/constants';
@@ -17,44 +17,44 @@ interface FilterBarProps {
   clearDone: () => void;
 }
 
-const FilterBar = memo(
-  ({ filter, setFilter, completedCount, clearDone }: FilterBarProps) => {
-    const handleTabPress = useCallback(
-      (f: Filter) => {
-        setFilter(f);
-        Keyboard.dismiss();
-      },
-      [setFilter],
-    );
+const FilterBar = ({
+  filter,
+  setFilter,
+  completedCount,
+  clearDone,
+}: FilterBarProps) => {
+  const handleTabPress = (f: Filter) => {
+    setFilter(f);
+    Keyboard.dismiss();
+  };
 
-    return (
-      <View style={styles.container}>
-        <View style={styles.tabBar}>
-          {FILTERS.map(f => (
-            <Pressable
-              key={f}
-              onPress={() => handleTabPress(f)}
-              style={[styles.tab, filter === f && styles.tabActive]}
+  return (
+    <View style={styles.container}>
+      <View style={styles.tabBar}>
+        {FILTERS.map(f => (
+          <Pressable
+            key={f}
+            onPress={() => handleTabPress(f)}
+            style={[styles.tab, filter === f && styles.tabActive]}
+          >
+            <Text
+              style={[styles.tabText, filter === f && styles.tabTextActive]}
             >
-              <Text
-                style={[styles.tabText, filter === f && styles.tabTextActive]}
-              >
-                {FILTER_LABELS[f]}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-
-        {completedCount > 0 && (
-          <Pressable onPress={clearDone} style={styles.clearButton}>
-            <Feather name="trash" size={14} color="#F87171" />
-            <Text style={styles.clearText}>Clear</Text>
+              {FILTER_LABELS[f]}
+            </Text>
           </Pressable>
-        )}
+        ))}
       </View>
-    );
-  },
-);
+
+      {completedCount > 0 && (
+        <Pressable onPress={clearDone} style={styles.clearButton}>
+          <Feather name="trash" size={14} color="#F87171" />
+          <Text style={styles.clearText}>Clear</Text>
+        </Pressable>
+      )}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

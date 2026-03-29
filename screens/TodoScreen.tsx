@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -59,16 +59,16 @@ export default function TodoScreen() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const handleAddTodo = useCallback(() => {
+  const handleAddTodo = () => {
     const trimmed = input.trim();
     if (!trimmed) return;
     addTodo(trimmed, priority);
     setInput('');
-  }, [input, priority, addTodo]);
+  };
 
-  const handleCloseEdit = useCallback(() => setEditTodo(null), []);
+  const handleCloseEdit = () => setEditTodo(null);
 
-  const filtered = useMemo(() => {
+  const filtered = () => {
     const list = todos
       .filter(t =>
         filter === 'all'
@@ -98,19 +98,16 @@ export default function TodoScreen() {
           return 0;
       }
     });
-  }, [todos, filter, sortMode, debouncedSearch]);
+  };
 
-  const renderItem = useCallback(
-    ({ item }: { item: Todo }) => (
-      <TodoItem
-        todo={item}
-        onToggle={toggleTodo}
-        onDelete={deleteTodo}
-        onEdit={setEditTodo}
-        screenWidth={SCREEN_W}
-      />
-    ),
-    [toggleTodo, deleteTodo],
+  const renderItem = ({ item }: { item: Todo }) => (
+    <TodoItem
+      todo={item}
+      onToggle={toggleTodo}
+      onDelete={deleteTodo}
+      onEdit={setEditTodo}
+      screenWidth={SCREEN_W}
+    />
   );
 
   return (
@@ -152,7 +149,7 @@ export default function TodoScreen() {
         )}
 
         <FlatList
-          data={filtered}
+          data={filtered()}
           keyExtractor={item => item.id}
           renderItem={renderItem}
           contentContainerStyle={

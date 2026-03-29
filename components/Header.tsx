@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const TODAY = new Date().toLocaleDateString('en-US', { weekday: 'long' });
@@ -8,7 +8,7 @@ interface HeaderProps {
   completedCount: number;
 }
 
-const Header = memo(({ activeCount, completedCount }: HeaderProps) => (
+const Header = ({ activeCount, completedCount }: HeaderProps) => (
   <View style={styles.container}>
     <View>
       <Text style={styles.dayLabel}>{TODAY}</Text>
@@ -27,7 +27,7 @@ const Header = memo(({ activeCount, completedCount }: HeaderProps) => (
       </View>
     </View>
   </View>
-));
+);
 
 const styles = StyleSheet.create({
   container: {

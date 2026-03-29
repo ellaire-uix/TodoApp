@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import Animated, {
   FadeInDown,
@@ -21,7 +21,6 @@ import {
 } from '../utils/constants';
 import { formatDate } from '../utils/helpers';
 
-// Pre-computed outside — stable references forever
 const PRIORITY_LABELS: Record<Priority, string> = {
   high: 'HIGH',
   medium: 'MEDIUM',
@@ -37,9 +36,6 @@ const MINI_PILL_STYLES = (() => {
   return result;
 })();
 
-const CHECKBOX_DONE = { backgroundColor: '#34D399', borderColor: '#34D399' };
-const CHECKBOX_UNDONE = { borderColor: '#44435A' };
-
 interface TodoItemProps {
   todo: Todo;
   onToggle: (id: string) => void;
@@ -54,15 +50,18 @@ const TodoItem = memo(
     const deleteReady = useSharedValue(false);
     const color = PRIORITY_COLOR[todo.priority];
 
-    const handleToggle = useCallback(() => {
+    // ✅ simple function (no need for useCallback)
+    const handleToggle = () => {
       Haptics.trigger('impactMedium');
       onToggle(todo.id);
-    }, [onToggle, todo.id]);
+    };
 
-    const handleEdit = useCallback(() => {
+    // ✅ fixed
+    const handleEdit = () => {
       onEdit(todo);
-    }, [onEdit, todo]);
+    };
 
+    // ✅ KEEP useMemo here (gesture should not recreate every render)
     const pan = useMemo(
       () =>
         Gesture.Pan()
@@ -120,7 +119,7 @@ const TodoItem = memo(
               onPress={handleToggle}
               style={[
                 styles.checkbox,
-                todo.completed ? CHECKBOX_DONE : CHECKBOX_UNDONE,
+                todo.completed ? styles.CHECKBOX_DONE : styles.CHECKBOX_UNDONE,
               ]}
             >
               {todo.completed && (
@@ -153,11 +152,7 @@ const TodoItem = memo(
               </View>
             </View>
 
-            <Pressable
-              onPress={handleEdit}
-              style={styles.editButton}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
+            <Pressable onPress={handleEdit} style={styles.editButton}>
               <Feather name="edit-2" size={16} color="#7E7D96" />
             </Pressable>
           </Animated.View>
@@ -250,6 +245,8 @@ const styles = StyleSheet.create({
   editButton: {
     padding: 16,
   },
+  CHECKBOX_DONE: { backgroundColor: '#34D399', borderColor: '#34D399' },
+  CHECKBOX_UNDONE: { borderColor: '#44435A' },
 });
 
 export default TodoItem;

@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { SortMode, SORT_OPTIONS } from '../utils/constants';
@@ -13,13 +13,10 @@ interface SortBarProps {
   setSortMode: (mode: SortMode) => void;
 }
 
-const SortBar = memo(({ sortMode, setSortMode }: SortBarProps) => {
-  const handlePress = useCallback(
-    (value: SortMode) => {
-      setSortMode(value);
-    },
-    [setSortMode],
-  );
+const SortBar = ({ sortMode, setSortMode }: SortBarProps) => {
+  const handlePress = (value: SortMode) => {
+    setSortMode(value);
+  };
 
   return (
     <View style={styles.container}>
@@ -53,9 +50,8 @@ const SortBar = memo(({ sortMode, setSortMode }: SortBarProps) => {
       </View>
     </View>
   );
-});
+};
 
-// styles unchanged — already clean
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
