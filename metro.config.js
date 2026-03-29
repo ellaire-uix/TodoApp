@@ -1,11 +1,12 @@
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const { withUniwindConfig } = require('uniwind/metro');
 
-/**
- * Metro configuration
- * https://reactnative.dev/docs/metro
- *
- * @type {import('@react-native/metro-config').MetroConfig}
- */
-const config = {};
+const config = mergeConfig(getDefaultConfig(__dirname), {
+  resolver: {
+    sourceExts: ['js', 'jsx', 'json', 'ts', 'tsx', 'css']
+  }
+});
 
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+module.exports = withUniwindConfig(config, {
+  cssEntryFile: './global.css'
+});
