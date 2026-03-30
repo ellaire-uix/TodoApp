@@ -1,4 +1,4 @@
-import React from 'react'; // removed useRef
+import React from 'react';
 import { View, TextInput, Pressable, StyleSheet } from 'react-native'; // removed TouchableOpacity
 import Feather from 'react-native-vector-icons/Feather';
 import PriorityPill from './PriorityPill';

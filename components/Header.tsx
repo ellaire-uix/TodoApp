@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const TODAY = new Date().toLocaleDateString('en-US', { weekday: 'long' });
-
+const DATE = new Date().toLocaleDateString();
 interface HeaderProps {
   activeCount: number;
   completedCount: number;
@@ -11,6 +11,7 @@ interface HeaderProps {
 const Header = ({ activeCount, completedCount }: HeaderProps) => (
   <View style={styles.container}>
     <View>
+      <Text style={styles.date}>{DATE}</Text>
       <Text style={styles.dayLabel}>{TODAY}</Text>
       <Text style={styles.title}>Todo App</Text>
     </View>
@@ -89,6 +90,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     marginTop: 2,
+  },
+  date: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#F0EFF8',
+    marginBottom: 4,
   },
 });
 

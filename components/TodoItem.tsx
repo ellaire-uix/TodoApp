@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import Animated, {
   FadeInDown,
@@ -50,44 +50,32 @@ const TodoItem = memo(
     const deleteReady = useSharedValue(false);
     const color = PRIORITY_COLOR[todo.priority];
 
-    // ✅ simple function (no need for useCallback)
     const handleToggle = () => {
       Haptics.trigger('impactMedium');
       onToggle(todo.id);
     };
 
-    // ✅ fixed
     const handleEdit = () => {
       onEdit(todo);
     };
-
-    // ✅ KEEP useMemo here (gesture should not recreate every render)
-    const pan = useMemo(
-      () =>
-        Gesture.Pan()
-          .activeOffsetX([-10, 10])
-          .onUpdate(e => {
-            if (e.translationX < 0) {
-              translateX.value = e.translationX * 0.8;
-              deleteReady.value = e.translationX < DELETE_THRESHOLD;
-            }
-          })
-          .onEnd(() => {
-            if (translateX.value < DELETE_THRESHOLD) {
-              translateX.value = withTiming(
-                -screenWidth,
-                { duration: 200 },
-                () => {
-                  runOnJS(onDelete)(todo.id);
-                },
-              );
-            } else {
-              translateX.value = withSpring(0);
-              deleteReady.value = false;
-            }
-          }),
-      [screenWidth, onDelete, todo.id],
-    );
+    const pan = Gesture.Pan()
+      .activeOffsetX([-10, 10])
+      .onUpdate(e => {
+        if (e.translationX < 0) {
+          translateX.value = e.translationX * 0.8;
+          deleteReady.value = e.translationX < DELETE_THRESHOLD;
+        }
+      })
+      .onEnd(() => {
+        if (translateX.value < DELETE_THRESHOLD) {
+          translateX.value = withTiming(-screenWidth, { duration: 200 }, () => {
+            runOnJS(onDelete)(todo.id);
+          });
+        } else {
+          translateX.value = withSpring(0);
+          deleteReady.value = false;
+        }
+      });
 
     const rowStyle = useAnimatedStyle(() => ({
       transform: [{ translateX: translateX.value }],
