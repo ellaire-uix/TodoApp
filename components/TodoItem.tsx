@@ -26,15 +26,16 @@ const PRIORITY_LABELS: Record<Priority, string> = {
   medium: 'MEDIUM',
   low: 'LOW',
 };
+const priorities: Priority[] = ['high', 'medium', 'low'];
 
-const MINI_PILL_STYLES = (() => {
-  const result = {} as Record<Priority, object>;
-  for (const p of ['high', 'medium', 'low'] as Priority[]) {
-    const c = PRIORITY_COLOR[p];
-    result[p] = { borderColor: c + '55', backgroundColor: c + '15' };
-  }
-  return result;
-})();
+const MINI_PILL_STYLES = priorities.reduce((acc, p) => {
+  const c = PRIORITY_COLOR[p];
+  acc[p] = {
+    borderColor: `${c}55`,
+    backgroundColor: `${c}15`,
+  };
+  return acc;
+}, {} as Record<Priority, { borderColor: string; backgroundColor: string }>);
 
 interface TodoItemProps {
   todo: Todo;

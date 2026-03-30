@@ -30,7 +30,6 @@ import {
 const { width: SCREEN_W } = Dimensions.get('window');
 
 const ItemSeparator = () => <View style={styles.separator} />;
-
 export default function TodoScreen() {
   const {
     todos,
@@ -153,7 +152,7 @@ export default function TodoScreen() {
           keyExtractor={item => item.id}
           renderItem={renderItem}
           contentContainerStyle={
-            filtered.length === 0 ? styles.emptyContainer : styles.listContainer
+            filtered().length === 0 ? styles.emptyContainer : styles.listContainer
           }
           ListEmptyComponent={<EmptyState filter={filter} />}
           keyboardDismissMode="on-drag"

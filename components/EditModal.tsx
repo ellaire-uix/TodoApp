@@ -6,7 +6,10 @@ import {
   Pressable,
   Modal,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Haptics from 'react-native-haptic-feedback';
 import PriorityPill from './PriorityPill';
 import { Todo, Priority } from '../utils/constants';
@@ -21,10 +24,19 @@ interface EditModalProps {
 }
 
 const EditModal = ({ visible, todo, onSave, onClose }: EditModalProps) => {
+  const insets = useSafeAreaInsets();
+
   const [text, setText] = useState(todo?.text ?? '');
   const [priority, setPriority] = useState<Priority>(
     todo?.priority ?? 'medium',
   );
+
+  useEffect(() => {
+    if (visible) {
+      setText(todo?.text ?? '');
+      setPriority(todo?.priority ?? 'medium');
+    }
+  }, [visible, todo]);
 
   const handleSave = () => {
     const t = text.trim();
@@ -34,13 +46,6 @@ const EditModal = ({ visible, todo, onSave, onClose }: EditModalProps) => {
     onClose();
   };
 
-  useEffect(() => {
-    if (visible) {
-      setText(todo?.text ?? '');
-      setPriority(todo?.priority ?? 'medium');
-    }
-  }, [visible, todo]);
-
   return (
     <Modal
       visible={visible}
@@ -49,54 +54,68 @@ const EditModal = ({ visible, todo, onSave, onClose }: EditModalProps) => {
       onRequestClose={onClose}
     >
       <Pressable style={styles.overlay} onPress={onClose}>
-        <Pressable style={styles.sheet} onPress={e => e.stopPropagation()}>
-          <View style={styles.handle} />
-          <Text style={styles.title}>Edit Task</Text>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={insets.top + 40}
+        >
+          <Pressable
+            style={[styles.sheet, { paddingBottom: 40 + insets.bottom }]}
+            onPress={e => e.stopPropagation()}
+          >
+            <View style={styles.handle} />
 
-          <TextInput
-            style={styles.input}
-            value={text}
-            onChangeText={setText}
-            autoFocus
-            multiline
-            placeholderTextColor="#44435A"
-            selectionColor="#7C6AF7"
-          />
+            <Text style={styles.title}>Edit Task</Text>
 
-          <Text style={styles.priorityLabel}>PRIORITY</Text>
+            <TextInput
+              style={styles.input}
+              value={text}
+              onChangeText={setText}
+              autoFocus
+              multiline
+              placeholder="Update your task..."
+              placeholderTextColor="#44435A"
+              selectionColor="#7C6AF7"
+              textAlignVertical="top"
+              returnKeyType="done"
+              blurOnSubmit
+            />
 
-          <View style={styles.pillRow}>
-            {PRIORITIES.map(p => (
-              <PriorityPill
-                key={p}
-                priority={p}
-                selected={priority === p}
-                onPress={() => setPriority(p)}
-              />
-            ))}
-          </View>
+            <Text style={styles.priorityLabel}>PRIORITY</Text>
 
-          <View style={styles.buttonRow}>
-            <Pressable
-              style={({ pressed }) => [
-                styles.cancelButton,
-                pressed && { opacity: 0.7 },
-              ]}
-              onPress={onClose}
-            >
-              <Text style={styles.cancelText}>Cancel</Text>
-            </Pressable>
-            <Pressable
-              style={({ pressed }) => [
-                styles.saveButton,
-                pressed && { opacity: 0.8 },
-              ]}
-              onPress={handleSave}
-            >
-              <Text style={styles.saveText}>Save Changes</Text>
-            </Pressable>
-          </View>
-        </Pressable>
+            <View style={styles.pillRow}>
+              {PRIORITIES.map(p => (
+                <PriorityPill
+                  key={p}
+                  priority={p}
+                  selected={priority === p}
+                  onPress={() => setPriority(p)}
+                />
+              ))}
+            </View>
+
+            <View style={styles.buttonRow}>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.cancelButton,
+                  pressed && { opacity: 0.7 },
+                ]}
+                onPress={onClose}
+              >
+                <Text style={styles.cancelText}>Cancel</Text>
+              </Pressable>
+
+              <Pressable
+                style={({ pressed }) => [
+                  styles.saveButton,
+                  pressed && { opacity: 0.8 },
+                ]}
+                onPress={handleSave}
+              >
+                <Text style={styles.saveText}>Save Changes</Text>
+              </Pressable>
+            </View>
+          </Pressable>
+        </KeyboardAvoidingView>
       </Pressable>
     </Modal>
   );
@@ -114,7 +133,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 24,
     paddingHorizontal: 24,
     paddingTop: 16,
-    paddingBottom: 40,
   },
   handle: {
     width: 48,
@@ -141,7 +159,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.1)',
-    textAlignVertical: 'top',
   },
   priorityLabel: {
     color: '#7E7D96',

@@ -8,21 +8,44 @@ const PRIORITY_LABELS: Record<Priority, string> = {
   low: 'LOW',
 };
 
-const PILL_STYLES = (() => {
-  const result = {} as Record<
-    Priority,
-    { selected: object; unselected: object }
-  >;
-  for (const p of ['high', 'medium', 'low'] as Priority[]) {
-    const c = PRIORITY_COLOR[p];
-    result[p] = {
-      selected: { borderColor: c + '100', backgroundColor: c + '50' },
-      unselected: { borderColor: c + '40', backgroundColor: c + '0D' },
-    };
+const PILL_STYLES = {
+  high: {
+    selected: {
+      borderColor: `${PRIORITY_COLOR.high}100`,
+      backgroundColor: `${PRIORITY_COLOR.high}50`,
+    },
+    unselected: {
+      borderColor: `${PRIORITY_COLOR.high}40`,
+      backgroundColor: `${PRIORITY_COLOR.high}0D`,
+    },
+  },
+  medium: {
+    selected: {
+      borderColor: `${PRIORITY_COLOR.medium}100`,
+      backgroundColor: `${PRIORITY_COLOR.medium}50`,
+    },
+    unselected: {
+      borderColor: `${PRIORITY_COLOR.medium}40`,
+      backgroundColor: `${PRIORITY_COLOR.medium}0D`,
+    },
+  },
+  low: {
+    selected: {
+      borderColor: `${PRIORITY_COLOR.low}100`,
+      backgroundColor: `${PRIORITY_COLOR.low}50`,
+    },
+    unselected: {
+      borderColor: `${PRIORITY_COLOR.low}40`,
+      backgroundColor: `${PRIORITY_COLOR.low}0D`,
+    },
+  },
+} satisfies Record<
+  Priority,
+  {
+    selected: { borderColor: string; backgroundColor: string };
+    unselected: { borderColor: string; backgroundColor: string };
   }
-  return result;
-})();
-
+>;
 interface PriorityPillProps {
   priority: Priority;
   selected?: boolean;

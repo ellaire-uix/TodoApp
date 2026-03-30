@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, Pressable, StyleSheet } from 'react-native'; // removed TouchableOpacity
+import { View, TextInput, Pressable, StyleSheet } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import PriorityPill from './PriorityPill';
 import { Priority } from '../utils/constants';
